@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 큐레이터 - TVING</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .chat-container {
+            max-width: 860px;
+            margin: 80px auto 40px;
+            padding: 0 20px;
+        }
+        .chat-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .chat-header h2 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .chat-header p {
+            color: #aaa;
+            font-size: 14px;
+        }
+        .chat-box {
+            background: #191919;
+            border: 1px solid #2e2e2e;
+            border-radius: 16px;
+            height: 560px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .message-bubble {
+            max-width: 85%;
+            padding: 14px 18px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .message-bot {
+            align-self: flex-start;
+            background: #262626;
+            color: #e5e5e5;
+            border-bottom-left-radius: 4px;
+            border: 1px solid #383838;
+        }
+        .message-user {
+            align-self: flex-end;
+            background: #e50914;
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-badge {
+            font-size: 12px;
+            color: #4ade80;
+            margin-bottom: 8px;
+            display: block;
+            font-weight: 600;
+        }
+        /* 추천 콘텐츠 썸네일 카드 그리드 */
+        .recommended-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-top: 14px;
+        }
+        .rec-card {
+            background: #1f1f1f;
+            border: 1px solid #333;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, border-color 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+        .rec-card:hover {
+            transform: translateY(-4px);
+            border-color: #e50914;
+        }
+        .rec-card-thumb {
+            width: 100%;
+            height: 110px;
+            object-fit: cover;
+            background: #111;
+        }
+        .rec-card-info {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .rec-card-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .rec-card-meta {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 6px;
+        }
+        .rec-card-btn {
+            margin-top: auto;
+            background: #2b2b2b;
+            color: #e5e5e5;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .rec-card:hover .rec-card-btn {
+            background: #e50914;
+            color: #fff;
+        }
+        .chat-input-area {
+            padding: 16px 20px;
+            background: #141414;
+            border-top: 1px solid #2e2e2e;
+            display: flex;
+            gap: 12px;
+        }
+        .chat-input {
+            flex: 1;
+            background: #262626;
+            border: 1px solid #3e3e3e;
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+        .chat-input:focus {
+            border-color: #e50914;
+        }
+        .chat-send-btn {
+            background: #e50914;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0 24px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .chat-send-btn:hover {
+            background: #f40612;
+        }
+        .chat-send-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+        .quick-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            justify-content: center;
+        }
+        .tag-btn {
+            background: #262626;
+            border: 1px solid #3e3e3e;
+            color: #bbb;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tag-btn:hover {
+            background: #333;
+            color: #fff;
+            border-color: #e50914;
+        }
+    </style>
+</head>
+<body>
+    <header class="header scrolled">
+        <div class="header-inner">
+            <a href="/" class="logo"><img src="https://image.tving.com/ntgs/operation/logo/2023/09/18/1695032536_1.svg" alt="TVING" height="24"></a>
+            <nav class="nav">
+                <a href="/pages/contents.html?category=드라마">드라마</a>
+                <a href="/pages/contents.html?category=예능">예능</a>
+                <a href="/pages/contents.html?category=영화">영화</a>
+                <a href="/pages/contents.html?category=애니">애니</a>
+                <a href="/pages/chat.html" style="color:#e50914;font-weight:700;">AI 큐레이터</a>
+            </nav>
+            <div class="auth-buttons" id="auth-buttons">
+                <a href="/pages/login.html" class="btn btn-outline">로그인</a>
+                <a href="/pages/register.html" class="btn btn-primary">회원가입</a>
+            </div>
+            <div class="user-menu" id="user-menu" style="display:none;">
+                <a href="/pages/wishlist.html" style="color:#aaa;font-size:13px;">찜</a>
+                <a href="/pages/history.html" style="color:#aaa;font-size:13px;">기록</a>
+                <span id="user-name" style="color:#ccc;font-size:13px;"></span>
+                <button class="btn btn-outline" onclick="logout()">로그아웃</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="chat-container">
+        <div class="chat-header">
+            <h2>TVING AI 초개인화 큐레이터</h2>
+            <p>시청 이력과 취향 데이터를 분석하여 Bedrock Claude가 최적의 콘텐츠를 추천합니다.</p>
+            <div class="quick-tags">
+                <button class="tag-btn" onclick="sendQuickMessage('내 시청 이력 기반으로 볼 만한 거 추천해줘')">내 시청 이력 기반 추천</button>
+                <button class="tag-btn" onclick="sendQuickMessage('주말에 몰아보기 좋은 긴장감 넘치는 스릴러 추천해줘')">주말 정주행 스릴러</button>
+                <button class="tag-btn" onclick="sendQuickMessage('가볍게 식사하면서 볼 힐링 예능 추천해줘')">가벼운 힐링 예능</button>
+            </div>
+        </div>
+
+        <div class="chat-box">
+            <div class="chat-messages" id="chat-messages">
+                <div class="message-bubble message-bot">
+                    안녕하세요. TVING 초개인화 AI 큐레이터입니다.<br><br>회원님의 시청 기록과 선호 취향을 바탕으로 최적의 콘텐츠를 분석하여 안내해 드립니다. 어떤 작품을 찾으십니까?
+                </div>
+            </div>
+            <form class="chat-input-area" id="chat-form" onsubmit="handleChatSubmit(event)">
+                <input type="text" class="chat-input" id="chat-input" placeholder="보고 싶은 장르, 분위기, 취향을 입력하세요..." autocomplete="off">
+                <button type="submit" class="chat-send-btn" id="chat-send-btn">전송</button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>주식회사 티빙 | CJ AI 클라우드 엔지니어 부트캠프 실습 프로젝트</p>
+    </footer>
+
+    <script src="/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+        });
+
+        function sendQuickMessage(text) {
+            document.getElementById('chat-input').value = text;
+            document.getElementById('chat-form').dispatchEvent(new Event('submit'));
+        }
+
+        async function handleChatSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            const sendBtn = document.getElementById('chat-send-btn');
+            const messagesContainer = document.getElementById('chat-messages');
+
+            // 사용자 말풍선 추가
+            const userBubble = document.createElement('div');
+            userBubble.className = 'message-bubble message-user';
+            userBubble.textContent = message;
+            messagesContainer.appendChild(userBubble);
+
+            input.value = '';
+            input.disabled = true;
+            sendBtn.disabled = true;
+
+            // 로딩 말풍선
+            const loadingBubble = document.createElement('div');
+            loadingBubble.className = 'message-bubble message-bot';
+            loadingBubble.innerHTML = '<i>TVING 라이브러리 및 시청 데이터 분석 중입니다...</i>';
+            messagesContainer.appendChild(loadingBubble);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            try {
+                const response = await api.post('/api/chat', { message: message });
+                
+                let botHtml = '';
+                if (response.personalized && response.context_used) {
+                    const histories = response.context_used.watch_history || [];
+                    if (histories.length > 0) {
+                        botHtml += `<span class="chat-badge">시청 이력 분석 완료 (${histories.slice(0, 2).join(', ')})</span>`;
+                    }
+                }
+                botHtml += `<div>${response.reply}</div>`;
+
+                // 추천 콘텐츠 썸네일 카드 렌더링
+                if (response.recommended_items && response.recommended_items.length > 0) {
+                    botHtml += `<div class="recommended-cards-grid">`;
+                    response.recommended_items.slice(0, 3).forEach(item => {
+                        botHtml += `
+                            <a href="/pages/content-detail.html?id=${item.id}" class="rec-card">
+                                <img src="${item.thumbnail_url || 'https://via.placeholder.com/200x120?text=TVING'}" alt="${item.title}" class="rec-card-thumb" onerror="this.src='https://via.placeholder.com/200x120?text=TVING'">
+                                <div class="rec-card-info">
+                                    <div class="rec-card-title">${item.title}</div>
+                                    <div class="rec-card-meta">${item.category} · ${item.genre}</div>
+                                    <div class="rec-card-btn">바로 시청하기</div>
+                                </div>
+                            </a>
+                        `;
+                    });
+                    botHtml += `</div>`;
+                }
+
+                loadingBubble.innerHTML = botHtml;
+            } catch (err) {
+                loadingBubble.innerHTML = `<span style="color:#ef4444;">오류가 발생했습니다: ${err.message || '서버 응답 실패'}</span>`;
+            } finally {
+                input.disabled = false;
+                sendBtn.disabled = false;
+                input.focus();
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+    </script>
+</body>
+</html>
