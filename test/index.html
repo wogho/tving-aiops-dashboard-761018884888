@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TVING AIOps - 지능형 운영자 관제 센터</title>
+    <title>TVING AIOps Lab - Strands CLI & Gateway MCP Direct Center</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -818,7 +818,24 @@
 
         <!-- 대시보드 본문 (인증 완료 시 노출) -->
         <div id="dashboard-section" style="display:none;">
-            <div class="grid-dashboard">
+            
+        <!-- Strands & Gateway MCP Metadata Banner -->
+        <div style="background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%); border: 1px solid #6366f1; border-radius: 12px; padding: 18px 24px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span style="font-weight: 700; color: #818CF8; font-size: 15px;"><i class="fas fa-network-wired"></i> Bedrock AgentCore & Strands CLI Export 연동 정보</span>
+                <span style="background: #4338CA; color: #EEF2FF; font-size: 11px; padding: 3px 8px; border-radius: 4px; font-family: monospace;">SDK: @aws/agentcore + Strands Framework</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; color: #CBD5E1;">
+                <div><strong>Harness ARN:</strong> <code style="color: #A5B4FC; background: #0f172a; padding: 2px 5px; border-radius: 3px;">arn:aws:bedrock-agentcore:ap-northeast-2:761018884888:harness/aiops_harness-imKz42wjiX</code></div>
+                <div><strong>Gateway MCP URL:</strong> <code style="color: #67E8F9; background: #0f172a; padding: 2px 5px; border-radius: 3px;">https://aiops-gateway-tweo0czpfr.gateway.bedrock-agentcore.ap-northeast-2.amazonaws.com/mcp</code></div>
+                <div><strong>Runtime ARN:</strong> <code style="color: #A5B4FC; background: #0f172a; padding: 2px 5px; border-radius: 3px;">arn:aws:bedrock-agentcore:ap-northeast-2:761018884888:runtime/harness_aiops_harness-QbsTJoAWut</code></div>
+                <div><strong>Gateway ARN:</strong> <code style="color: #67E8F9; background: #0f172a; padding: 2px 5px; border-radius: 3px;">arn:aws:bedrock-agentcore:ap-northeast-2:761018884888:gateway/aiops-gateway-tweo0czpfr</code></div>
+                <div><strong>Endpoint:</strong> <code style="color: #FBCFE8; background: #0f172a; padding: 2px 5px; border-radius: 3px;">DEFAULT (Version 5)</code></div>
+                <div><strong>Core LLM:</strong> <code style="color: #FDE047; background: #0f172a; padding: 2px 5px; border-radius: 3px;">Claude 3.5 Sonnet (Strands Profile)</code></div>
+            </div>
+        </div>
+
+        <div class="grid-dashboard">
                 <!-- AIOps 운영자 진단 AI 챗봇 (Full Width) -->
                 <div class="chat-panel">
                     <div class="chat-header">
@@ -969,7 +986,7 @@
             const loadingId = appendAiLoading();
 
             try {
-                const res = await fetch('/api/ops/ai-chat', {
+                const res = await fetch('/api/testops/ai-chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: message })

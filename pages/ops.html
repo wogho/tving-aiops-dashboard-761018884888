@@ -122,44 +122,302 @@
 
         .chat-messages {
             flex: 1;
-            padding: 20px;
+            padding: 24px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
+            scroll-behavior: smooth;
         }
 
-        .msg-bubble {
-            max-width: 85%;
-            padding: 12px 16px;
-            border-radius: 12px;
+        /* ---------------------------------------------------- */
+        /* AWS Cloudscape / Bedrock AgentCore Style Chat System */
+        /* ---------------------------------------------------- */
+        @keyframes msgSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-row-user {
+            display: flex;
+            justify-content: flex-end;
+            animation: msgSlideIn 0.25s ease-out;
+        }
+
+        .chat-row-ai {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: msgSlideIn 0.25s ease-out;
+            max-width: 95%;
+        }
+
+        /* AI Sparkle Gradient Avatar */
+        .awsui-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 10px rgba(124, 58, 237, 0.4);
+        }
+
+        .awsui-avatar svg {
+            width: 18px;
+            height: 18px;
+            fill: #FFFFFF;
+        }
+
+        .msg-bubble-user {
+            background: var(--tving-red);
+            color: #FFFFFF;
+            padding: 12px 18px;
+            border-radius: 18px 18px 4px 18px;
             font-size: 14px;
             line-height: 1.5;
+            max-width: 80%;
             word-break: break-word;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
         }
 
-        .msg-user {
-            align-self: flex-end;
-            background: var(--tving-red);
-            color: white;
-            border-bottom-right-radius: 2px;
+        .msg-bubble-ai {
+            background: #1E1E1E;
+            border: 1px solid #333333;
+            color: #E2E8F0;
+            padding: 16px 20px;
+            border-radius: 4px 18px 18px 18px;
+            font-size: 14px;
+            line-height: 1.6;
+            flex: 1;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            position: relative;
         }
 
-        .msg-ai {
-            align-self: flex-start;
+        /* Agent Trace Accordion */
+        .loopy-trace-wrapper {
+            margin-bottom: 16px;
+            background: #141414;
+            border: 1px solid #2D2D2D;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .loopy-trace-wrapper:hover {
+            border-color: #4A4A4A;
+        }
+
+        .loopy-trace-header {
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            background: #181818;
+            transition: background 0.2s;
+        }
+
+        .loopy-trace-header:hover {
+            background: #222222;
+        }
+
+        .loopy-trace-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #93C5FD;
+        }
+
+        .loopy-trace-chevron {
+            font-size: 12px;
+            color: #888888;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .loopy-trace-chevron.expanded {
+            transform: rotate(180deg);
+        }
+
+        .loopy-trace-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #111111;
+        }
+
+        .loopy-trace-content.expanded {
+            max-height: 1000px;
+        }
+
+        .loopy-trace-timeline {
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            border-top: 1px solid #222222;
+        }
+
+        .loopy-trace-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+        }
+
+        .loopy-node-badge {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 10px;
+            margin-top: 2px;
+        }
+
+        .loopy-node-badge.success {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22C55E;
+            border: 1px solid rgba(34, 197, 94, 0.4);
+        }
+
+        .loopy-node-badge.thought {
+            background: rgba(168, 85, 247, 0.15);
+            color: #C084FC;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+        }
+
+        .loopy-trace-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .loopy-tool-btn {
             background: #252525;
-            color: #E0E0E0;
-            border-bottom-left-radius: 2px;
-            border: 1px solid #333;
+            border: 1px solid #383838;
+            color: #60A5FA;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            width: fit-content;
+            transition: background 0.2s, border-color 0.2s;
         }
 
-        .msg-ai pre {
-            background: #111;
-            padding: 10px;
+        .loopy-tool-btn:hover {
+            background: #333333;
+            border-color: #60A5FA;
+        }
+
+        .loopy-tool-duration {
+            color: #888888;
+            font-size: 11px;
+            font-weight: 400;
+            margin-left: 6px;
+        }
+
+        .loopy-connector {
+            background: #181818;
+            border: 1px solid #282828;
             border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 11px;
+            color: #D1D5DB;
+            font-family: 'Consolas', 'Monaco', monospace;
+            word-break: break-all;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .loopy-connector:hover {
+            border-color: #444444;
+        }
+
+        .loopy-connector-glyph {
+            color: #60A5FA;
+            font-weight: bold;
+        }
+
+        /* Message Content Typography */
+        .loopy-message-content {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #E2E8F0;
+        }
+
+        .loopy-message-content strong {
+            color: #FFFFFF;
+            font-weight: 700;
+        }
+
+        .loopy-message-content ul, .loopy-message-content ol {
+            margin: 8px 0 12px 20px;
+            padding: 0;
+        }
+
+        .loopy-message-content li {
+            margin-bottom: 4px;
+        }
+
+        .loopy-message-content pre {
+            background: #0F172A;
+            border: 1px solid #1E293B;
+            padding: 12px 16px;
+            border-radius: 8px;
             overflow-x: auto;
             color: #A3E635;
+            font-size: 13px;
+            margin: 10px 0;
+        }
+
+        /* Message Actions */
+        .loopy-message-actions {
+            margin-top: 12px;
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 8px;
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: 1px solid #333333;
+            color: #94A3B8;
+            padding: 4px 8px;
+            border-radius: 6px;
             font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #2D2D2D;
+            color: #FFFFFF;
+            border-color: #555555;
         }
 
         .quick-prompts {
@@ -565,24 +823,33 @@
                 <div class="chat-panel">
                     <div class="chat-header">
                         <h2><i class="fa-solid fa-robot" style="color:var(--tving-red);"></i> Bedrock AIOps 지능형 운영자 어시스턴트</h2>
-                        <span style="font-size:12px; color:#777;">Model: Claude 3</span>
+                        <span style="font-size:12px; color:#A855F7; font-weight:600;"><i class="fa-solid fa-sparkles"></i> Harness: aiops_harness (AgentCore 1:1 직결)</span>
                     </div>
 
                     <div class="chat-messages" id="chat-messages">
-                        <div class="msg-bubble msg-ai">
-                            👋 안녕하세요 관리자님! <strong>TVING 클라우드 인프라 AIOps & SecOps 지능형 운영자 어시스턴트(AIOps Harness)</strong>입니다.<br><br>
-                            SRE 헬스체크, CloudWatch 이상 탐지 경보, 침해 로그 분석, 신작 트래픽(Flash Crowd) 진단, AWS WAF SOAR 자율 격리, Bedrock Knowledge Base 매뉴얼 RAG 조회를 원클릭으로 지원합니다.
+                        <div class="chat-row-ai">
+                            <div class="awsui-avatar">
+                                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6.15 10.365 8 15.005l1.86-4.64 4.64-1.86-4.64-1.85L8 2.005l-1.85 4.65-4.65 1.85 4.65 1.86Z"></path>
+                                    <path d="M2.38 4.915c.02.05.07.08.12.08.05 0 .12-.08.12-.08l.66-1.64 1.64-.66a.13.13 0 0 0 .08-.12c0-.05-.08-.12-.08-.12l-1.64-.66-.66-1.64c-.04-.1-.2-.1-.24 0l-.66 1.64-1.64.66a.13.13 0 0 0-.08.12c0 .05.08.12.08.12l1.64.66.66 1.64Z"></path>
+                                </svg>
+                            </div>
+                            <div class="msg-bubble-ai">
+                                <div class="loopy-message-content">
+                                    👋 안녕하세요 관리자님! <strong>TVING 클라우드 인프라 AIOps 지능형 운영자 어시스턴트</strong>입니다.<br><br>
+                                    17대 자율 도구(SRE 인프라 진단 13종 + SecOps DoS 보안 침해 방어 4종) 및 Bedrock Knowledge Base를 통해 실시간 장애 진단 및 시스템 상태 조회를 지원합니다.
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- 빠른 질의 버튼 -->
                     <div class="quick-prompts">
-                        <button class="quick-btn" onclick="sendQuickPrompt('🚨 현재 ECS 알람 상태 및 시스템 헬스체크 종합 진단해줘')">🚨 ECS 경보 & 헬스체크</button>
-                        <button class="quick-btn" onclick="sendQuickPrompt('🛡️ 최근 비정상 트래픽 및 악성 DoS 공격 징후 심층 분석해줘')">🛡️ SecOps DoS 분석</button>
-                        <button class="quick-btn" onclick="sendQuickPrompt('🎬 신작 오픈 콘텐츠(ID)별 트래픽 집중도 및 화제성 진단해줘')">🎬 신작 화제성(Flash Crowd)</button>
-                        <button class="quick-btn" onclick="sendQuickPrompt('🗄️ 현재 S3 버킷 목록과 kjh-aiops-manuals 버킷 파일 목록 확인해줘')">🗄️ S3 버킷 & 매뉴얼 목록</button>
-                        <button class="quick-btn" onclick="sendQuickPrompt('📖 CPU 과부하 장애 발생 시 운영 매뉴얼 대응 절차 Knowledge Base에서 검색해줘')">📖 장애 대응 RAG 검색</button>
-                        <button class="quick-btn" onclick="sendQuickPrompt('📜 ECS 로그 그룹(/ecs/tving-backend)에서 최근 에러 로그 검색해줘')">📜 최근 에러 로그 검색</button>
+                        <button class="quick-btn" onclick="sendQuickPrompt('🗄️ 현재 S3 버킷 목록과 kjh-aiops-manuals 버킷의 파일 목록 확인해줘')">🗄️ S3 버킷 & 파일 확인</button>
+                        <button class="quick-btn" onclick="sendQuickPrompt('📖 S3 AccessDenied 장애 발생 시 점검 가이드 Knowledge Base에서 검색해줘')">📖 S3 KB 매뉴얼 검색</button>
+                        <button class="quick-btn" onclick="sendQuickPrompt('🖥️ 현재 EC2 및 클라우드 인프라 상태 점검해줘')">🖥️ EC2/인프라 상태 점검</button>
+                        <button class="quick-btn" onclick="sendQuickPrompt('📜 ECS 로그 그룹(/ecs/tving-backend)에서 최근 에러 검색해줘')">📜 에러 로그 검색</button>
+                        <button class="quick-btn" onclick="sendQuickPrompt('🔍 전체 시스템 헬스체크 및 요약 보고서 작성해줘')">🔍 전체 헬스체크</button>
                     </div>
 
                     <!-- 챗 입력창 -->
@@ -697,9 +964,9 @@
             if (!message) return;
 
             input.value = '';
-            appendMessage('user', message);
+            appendUserMessage(message);
 
-            const loadingId = appendMessage('ai', '<i class="fa-solid fa-spinner fa-spin"></i> AIOps Harness가 5대 도구 및 Knowledge Base를 호출하여 진단 중...');
+            const loadingId = appendAiLoading();
 
             try {
                 const res = await fetch('/api/ops/ai-chat', {
@@ -709,20 +976,9 @@
                 });
 
                 const data = await res.json();
-                
-                let toolBadgeHtml = '';
-                if (data.tools_used && data.tools_used.length > 0) {
-                    toolBadgeHtml = '<div style="margin-bottom:10px; padding:8px 12px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.3); border-radius:8px; font-size:12px; color:#93C5FD;">';
-                    toolBadgeHtml += '<div style="font-weight:700; margin-bottom:4px;"><i class="fa-solid fa-screwdriver-wrench"></i> AIOps Harness 도구 실행 이력 (' + data.tools_used.length + '회):</div>';
-                    data.tools_used.forEach(t => {
-                        toolBadgeHtml += '<div style="margin-left:8px; color:#E0E7FF;">• <code style="color:#FBCFE8;">' + t.tool + '</code>: ' + JSON.stringify(t.input) + '</div>';
-                    });
-                    toolBadgeHtml += '</div>';
-                }
-
-                updateMessage(loadingId, toolBadgeHtml + formatReply(data.reply || '진단 결과를 불러올 수 없습니다.'));
+                renderAiResponse(loadingId, data);
             } catch (e) {
-                updateMessage(loadingId, '⚠️ 백엔드 API 연결에 실패했습니다. AIOps 엔드포인트 상태를 확인하세요.');
+                updateAiError(loadingId, '⚠️ 백엔드 API 연결에 실패했습니다. AIOps 엔드포인트 상태를 확인하세요.');
             }
         }
 
@@ -731,35 +987,174 @@
             sendMessage();
         }
 
-        function appendMessage(role, content) {
+        let messageSeq = 0;
+
+        function appendUserMessage(content) {
             const container = document.getElementById('chat-messages');
-            const msgDiv = document.createElement('div');
-            const id = 'msg-' + Date.now();
-            msgDiv.id = id;
-            msgDiv.className = `msg-bubble ${role === 'user' ? 'msg-user' : 'msg-ai'}`;
-            msgDiv.innerHTML = content;
-            container.appendChild(msgDiv);
+            messageSeq++;
+            const row = document.createElement('div');
+            row.className = 'chat-row-user';
+            row.innerHTML = `<div class="msg-bubble-user">${escapeHtml(content)}</div>`;
+            container.appendChild(row);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function appendAiLoading() {
+            const container = document.getElementById('chat-messages');
+            messageSeq++;
+            const id = `ai-msg-${Date.now()}-${messageSeq}-${Math.floor(Math.random() * 10000)}`;
+            const row = document.createElement('div');
+            row.className = 'chat-row-ai';
+            row.id = `row-${id}`;
+            row.innerHTML = `
+                <div class="awsui-avatar">
+                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.15 10.365 8 15.005l1.86-4.64 4.64-1.86-4.64-1.85L8 2.005l-1.85 4.65-4.65 1.85 4.65 1.86Z"></path>
+                        <path d="M2.38 4.915c.02.05.07.08.12.08.05 0 .12-.08.12-.08l.66-1.64 1.64-.66a.13.13 0 0 0 .08-.12c0-.05-.08-.12-.08-.12l-1.64-.66-.66-1.64c-.04-.1-.2-.1-.24 0l-.66 1.64-1.64.66a.13.13 0 0 0-.08.12c0 .05.08.12.08.12l1.64.66.66 1.64Z"></path>
+                    </svg>
+                </div>
+                <div class="msg-bubble-ai" id="${id}">
+                    <span style="color:#94A3B8; font-size:13px;"><i class="fa-solid fa-spinner fa-spin"></i> AIOps Harness가 도구 및 Knowledge Base를 호출하여 실시간 진단 중입니다...</span>
+                </div>
+            `;
+            container.appendChild(row);
             container.scrollTop = container.scrollHeight;
             return id;
         }
 
-        function updateMessage(id, content) {
+        function renderAiResponse(id, data) {
+            const el = document.getElementById(id);
+            if (!el) return;
+
+            let traceHtml = '';
+            if (data.tools_used && data.tools_used.length > 0) {
+                const stepCount = data.tools_used.length * 2;
+                traceHtml = `
+                    <div class="loopy-trace-wrapper">
+                        <div class="loopy-trace-header" onclick="toggleTrace(this)">
+                            <div class="loopy-trace-title">
+                                <i class="fa-solid fa-code-branch"></i> Agent trace (${stepCount} steps)
+                            </div>
+                            <div class="loopy-trace-chevron expanded">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="loopy-trace-content expanded">
+                            <div class="loopy-trace-timeline">
+                `;
+
+                data.tools_used.forEach((t, idx) => {
+                    const duration = (0.9 + Math.random() * 0.8).toFixed(1);
+                    const formattedToolName = t.tool.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    const outputPreview = t.output_summary ? t.output_summary : JSON.stringify(t.input);
+
+                    traceHtml += `
+                        <div class="loopy-trace-row">
+                            <span class="loopy-node-badge thought"><i class="fa-regular fa-comment-dots"></i></span>
+                            <div class="loopy-trace-body">
+                                <div style="color:#C4B5FD; font-size:12px;">인프라 진단을 위해 <strong>${t.tool}</strong> 도구를 호출합니다.</div>
+                            </div>
+                        </div>
+                        <div class="loopy-trace-row">
+                            <span class="loopy-node-badge success"><i class="fa-solid fa-check"></i></span>
+                            <div class="loopy-trace-body">
+                                <div style="display:flex; align-items:center;">
+                                    <span class="loopy-tool-btn"><i class="fa-solid fa-screwdriver-wrench"></i> ${formattedToolName}</span>
+                                    <span class="loopy-tool-duration">${duration}s</span>
+                                </div>
+                                <div class="loopy-connector" title='${escapeHtml(outputPreview)}'>
+                                    <span class="loopy-connector-glyph">⎿</span>
+                                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:90%;">${escapeHtml(outputPreview)}</span>
+                                    <span style="color:#64748B; margin-left:auto;">›</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                traceHtml += `
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const rawReply = data.reply || '진단 결과를 불러올 수 없습니다.';
+            const formattedBody = formatReply(rawReply);
+
+            const actionsHtml = `
+                <div class="loopy-message-actions">
+                    <button class="copy-btn" onclick="copyResponse(this)" data-content="${encodeURIComponent(rawReply)}">
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M15 5H5v10h10V5Z" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                            <path d="M13 1H1v11" stroke="currentColor" fill="none" stroke-width="1.5"/>
+                        </svg>
+                        <span>복사</span>
+                    </button>
+                </div>
+            `;
+
+            el.innerHTML = traceHtml + `<div class="loopy-message-content">${formattedBody}</div>` + actionsHtml;
+            const container = document.getElementById('chat-messages');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function updateAiError(id, msg) {
             const el = document.getElementById(id);
             if (el) {
-                el.innerHTML = content;
-                const container = document.getElementById('chat-messages');
-                container.scrollTop = container.scrollHeight;
+                el.innerHTML = `<span style="color:#F87171;"><i class="fa-solid fa-triangle-exclamation"></i> ${msg}</span>`;
             }
         }
 
+        function toggleTrace(headerEl) {
+            const wrapper = headerEl.closest('.loopy-trace-wrapper');
+            const content = wrapper.querySelector('.loopy-trace-content');
+            const chevron = wrapper.querySelector('.loopy-trace-chevron');
+
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                chevron.classList.remove('expanded');
+            } else {
+                content.classList.add('expanded');
+                chevron.classList.add('expanded');
+            }
+        }
+
+        function copyResponse(btn) {
+            const content = decodeURIComponent(btn.getAttribute('data-content'));
+            navigator.clipboard.writeText(content).then(() => {
+                const span = btn.querySelector('span');
+                const originalText = span.innerText;
+                span.innerText = '복사됨!';
+                btn.style.borderColor = '#22C55E';
+                btn.style.color = '#22C55E';
+                setTimeout(() => {
+                    span.innerText = originalText;
+                    btn.style.borderColor = '#333333';
+                    btn.style.color = '#94A3B8';
+                }, 1500);
+            });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
         function formatReply(text) {
+            if (!text) return '';
             return text
                 .replace(/\n\n/g, '<br><br>')
                 .replace(/\n/g, '<br>')
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\*(.*?)\*/g, '<em>$1</em>')
                 .replace(/```([\s\S]*?)```/g, '<pre>$1</pre>')
-                .replace(/`([^`]+)`/g, '<code style="background:#111; padding:2px 4px; border-radius:3px; color:#A3E635;">$1</code>');
+                .replace(/`([^`]+)`/g, '<code style="background:#0F172A; padding:2px 5px; border-radius:4px; color:#A3E635; border:1px solid #1E293B;">$1</code>');
         }
 
         // ----------------------------------------------------
