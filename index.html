@@ -570,18 +570,19 @@
 
                     <div class="chat-messages" id="chat-messages">
                         <div class="msg-bubble msg-ai">
-                            👋 안녕하세요 관리자님! <strong>TVING 클라우드 인프라 AIOps 지능형 운영자 어시스턴트</strong>입니다.<br><br>
-                            5대 자율 도구(S3, EC2, CloudWatch Logs, Knowledge Base)를 통해 실시간 장애 진단 및 시스템 상태 조회를 지원합니다.
+                            👋 안녕하세요 관리자님! <strong>TVING 클라우드 인프라 AIOps & SecOps 지능형 운영자 어시스턴트(AIOps Harness)</strong>입니다.<br><br>
+                            SRE 헬스체크, CloudWatch 이상 탐지 경보, 침해 로그 분석, 신작 트래픽(Flash Crowd) 진단, AWS WAF SOAR 자율 격리, Bedrock Knowledge Base 매뉴얼 RAG 조회를 원클릭으로 지원합니다.
                         </div>
                     </div>
 
                     <!-- 빠른 질의 버튼 -->
                     <div class="quick-prompts">
-                        <button class="quick-btn" onclick="sendQuickPrompt('🗄️ 현재 S3 버킷 목록과 kjh-aiops-manuals 버킷의 파일 목록 확인해줘')">🗄️ S3 버킷 & 파일 확인</button>
-                        <button class="quick-btn" onclick="sendQuickPrompt('📖 S3 AccessDenied 장애 발생 시 점검 가이드 Knowledge Base에서 검색해줘')">📖 S3 KB 매뉴얼 검색</button>
-                        <button class="quick-btn" onclick="sendQuickPrompt('🖥️ 현재 EC2 및 클라우드 인프라 상태 점검해줘')">🖥️ EC2/인프라 상태 점검</button>
-                        <button class="quick-btn" onclick="sendQuickPrompt('📜 ECS 로그 그룹(/ecs/tving-backend)에서 최근 에러 검색해줘')">📜 에러 로그 검색</button>
-                        <button class="quick-btn" onclick="sendQuickPrompt('🔍 전체 시스템 헬스체크 및 요약 보고서 작성해줘')">🔍 전체 헬스체크</button>
+                        <button class="quick-btn" onclick="sendQuickPrompt('🚨 현재 ECS 알람 상태 및 시스템 헬스체크 종합 진단해줘')">🚨 ECS 경보 & 헬스체크</button>
+                        <button class="quick-btn" onclick="sendQuickPrompt('🛡️ 최근 비정상 트래픽 및 악성 DoS 공격 징후 심층 분석해줘')">🛡️ SecOps DoS 분석</button>
+                        <button class="quick-btn" onclick="sendQuickPrompt('🎬 신작 오픈 콘텐츠(ID)별 트래픽 집중도 및 화제성 진단해줘')">🎬 신작 화제성(Flash Crowd)</button>
+                        <button class="quick-btn" onclick="sendQuickPrompt('🗄️ 현재 S3 버킷 목록과 kjh-aiops-manuals 버킷 파일 목록 확인해줘')">🗄️ S3 버킷 & 매뉴얼 목록</button>
+                        <button class="quick-btn" onclick="sendQuickPrompt('📖 CPU 과부하 장애 발생 시 운영 매뉴얼 대응 절차 Knowledge Base에서 검색해줘')">📖 장애 대응 RAG 검색</button>
+                        <button class="quick-btn" onclick="sendQuickPrompt('📜 ECS 로그 그룹(/ecs/tving-backend)에서 최근 에러 로그 검색해줘')">📜 최근 에러 로그 검색</button>
                     </div>
 
                     <!-- 챗 입력창 -->
