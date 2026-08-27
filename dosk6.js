@@ -11,13 +11,13 @@ const BASE_URL = 'https://d33nd37o8cwhu4.cloudfront.net';
 const ATTACKER_IP = '198.51.100.23';
 
 export const options = {
-  vus: 5,           // 소수(5명)의 가상 봇이지만 고비용 연산을 집중 호출
-  duration: '3m',   // 3분간 지속적인 고부하 주입
+  vus: 8,           // 8명의 가상 봇이 고비용 연산을 초집중 호출
+  duration: '1m',   // 10분 발표에 맞춰 1분간 초고밀도 부하 주입
 };
 
 export default function () {
-  // 💥 고비용 CPU 부하 엔드포인트 및 복합 검색 쿼리를 집중 호출하여 리소스 고갈 유발
-  const targetUrl = `${BASE_URL}/api/ops/cpu-load?duration=3&client_ip=${ATTACKER_IP}`;
+  // 💥 고비용 CPU 부하 엔드포인트를 집중 호출하여 즉각적인 CPU 스파이크 및 이상 탐지 유발
+  const targetUrl = `${BASE_URL}/api/ops/cpu-load?duration=5&client_ip=${ATTACKER_IP}`;
 
   const params = {
     headers: {

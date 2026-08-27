@@ -41,14 +41,14 @@ export const options = {
   scenarios: {
     hot_content_surge: {
       executor: 'constant-vus',
-      vus: 10 + Math.floor(Math.random() * 20), // 10~29명 랜덤
-      duration: '3m',
+      vus: 20 + Math.floor(Math.random() * 10), // 20~29명 집중 유입
+      duration: '1m', // 10분 발표에 맞게 1분 집중 실행
       exec: 'hitHotContent',
     },
     background_traffic: {
       executor: 'constant-vus',
-      vus: 1 + Math.floor(Math.random() * 4), // 1~4명 랜덤
-      duration: '3m',
+      vus: 2 + Math.floor(Math.random() * 3), // 2~4명 분산 유입
+      duration: '1m', // 10분 발표에 맞게 1분 집중 실행
       exec: 'hitNormalContent',
     },
   },
